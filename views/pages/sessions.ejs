@@ -1,0 +1,56 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/nav") %>
+
+<main class="wrap">
+  <%- include("../partials/flash") %>
+
+  <section class="pageHead" data-reveal>
+    <h1 class="pageTitle">My Sessions</h1>
+    <p class="pageSub">These are the devices currently signed in. If anything looks unfamiliar, revoke it.</p>
+  </section>
+
+  <section class="card big" data-reveal>
+    <div class="tableWrap">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Remember</th>
+            <th>Last seen</th>
+            <th>Expires</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!sessions || sessions.length === 0) { %>
+            <tr><td colspan="5" class="muted">No sessions found.</td></tr>
+          <% } else { %>
+            <% sessions.forEach((s) => { %>
+              <tr>
+                <td><%= s.device_tag %></td>
+                <td class="mono"><%= s.remember_me ? "yes" : "no" %></td>
+                <td><%= new Date(s.last_seen).toLocaleString() %></td>
+                <td><%= new Date(s.expires_at).toLocaleString() %></td>
+                <td>
+                  <form method="POST" action="/dash/sessions/revoke" style="margin:0">
+                    <input type="hidden" name="sid" value="<%= s.sid %>" />
+                    <button class="btn small <%= s.sid === currentSid ? 'danger' : '' %>" type="submit">
+                      <%= s.sid === currentSid ? "Revoke (this device)" : "Revoke" %>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card big" data-reveal>
+    <div class="cardTitle">Helpful tip</div>
+    <div class="cardText muted"><%= humanTip('sessions') %></div>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,40 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/nav") %>
+
+<main class="wrap">
+  <%- include("../partials/flash") %>
+
+  <section class="pageHead" data-reveal>
+    <h1 class="pageTitle">Register</h1>
+    <p class="pageSub">We’ll create your account (with a UUID), start a session, and tag the device so you can manage sessions later.</p>
+  </section>
+
+  <section class="card big" data-reveal>
+    <form method="POST" action="/register" class="form">
+      <label class="lbl">Username</label>
+      <input class="input" name="username" placeholder="username" autocomplete="username" required />
+
+      <label class="lbl" style="margin-top:12px">Email</label>
+      <input class="input" name="email" placeholder="email" type="email" autocomplete="email" required />
+
+      <label class="lbl" style="margin-top:12px">Password</label>
+      <input class="input" name="password" placeholder="min 8 characters" type="password" autocomplete="new-password" required />
+
+      <label class="check">
+        <input type="checkbox" name="remember" checked />
+        <span>Remember me</span>
+      </label>
+
+      <div class="cta" style="margin-top:14px">
+        <button class="btn primary" type="submit">Create account</button>
+        <a class="btn" href="/login">Back to login</a>
+      </div>
+    </form>
+
+    <div class="cardText muted" style="margin-top:12px">
+      <span class="mono">Quick note:</span> <%= humanTip('auth') %>
+    </div>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>

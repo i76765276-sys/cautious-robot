@@ -1,0 +1,124 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/nav") %>
+
+<main class="wrap">
+  <%- include("../partials/flash") %>
+
+  <section class="pageHead" data-reveal>
+    <h1 class="pageTitle">Admin</h1>
+    <p class="pageSub">You’re in the admin area as <span class="mono"><%= user.email %></span>.</p>
+  </section>
+
+  <section class="card big" data-reveal>
+    <div class="cardTitle">Admin note</div>
+    <div class="cardText muted"><%= humanTip('admin') %></div>
+  </section>
+
+  <section class="grid2" data-reveal>
+    <article class="card big">
+      <div class="cardTitle">Create Announcement</div>
+      <form method="POST" action="/admin/announcement" class="form">
+        <label class="lbl">Title</label>
+        <input class="input" name="title" maxlength="80" required />
+
+        <label class="lbl" style="margin-top:12px">Body</label>
+        <textarea class="input" name="body" rows="4" maxlength="500" style="resize:vertical" required></textarea>
+
+        <div class="cta" style="margin-top:14px">
+          <button class="btn primary" type="submit">Post</button>
+        </div>
+      </form>
+    </article>
+
+    <article class="card big">
+      <div class="cardTitle">Latest Announcements</div>
+      <div class="tableWrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Message</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (!announcements || announcements.length === 0) { %>
+              <tr>
+                <td colspan="3" class="muted">No announcements yet. Create your first one on the left.</td>
+              </tr>
+            <% } else { %>
+              <% (announcements || []).forEach((n) => { %>
+                <tr>
+                  <td style="font-weight:750"><%= n.title %></td>
+                  <td><%= n.body %></td>
+                  <td><%= new Date(n.created_at).toLocaleString() %></td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="card big" style="grid-column: 1 / -1;">
+      <div class="cardTitle">Active Sessions</div>
+      <div class="tableWrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Email</th>
+              <th>Device</th>
+              <th>Remember</th>
+              <th>Last seen</th>
+              <th>Revoke</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% (sessions || []).forEach((s) => { %>
+              <tr>
+                <td><%= s.username %></td>
+                <td><%= s.email %></td>
+                <td><%= s.device_tag %></td>
+                <td class="mono"><%= s.remember_me ? "yes" : "no" %></td>
+                <td><%= new Date(s.last_seen).toLocaleString() %></td>
+                <td>
+                  <form method="POST" action="/admin/session/revoke" style="margin:0">
+                    <input type="hidden" name="sid" value="<%= s.sid %>" />
+                    <button class="btn small danger" type="submit">Revoke</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="card big" style="grid-column: 1 / -1;">
+      <div class="cardTitle">Recent Users</div>
+      <div class="tableWrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% (users || []).forEach((u) => { %>
+              <tr>
+                <td><%= u.username %></td>
+                <td><%= u.email %></td>
+                <td><%= new Date(u.created_at).toLocaleString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>

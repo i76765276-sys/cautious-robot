@@ -1,0 +1,98 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/nav") %>
+
+<main class="wrap">
+  <%- include("../partials/flash") %>
+
+  <section class="pageHead" data-reveal>
+    <h1 class="pageTitle">Device Agent</h1>
+    <p class="pageSub">
+      The Device Agent is required if you want your Installed Apps to show inside Dash.
+    </p>
+  </section>
+
+  <section class="card big" data-reveal>
+    <div class="cardTitle">Step-by-step</div>
+    <ol class="cardText" style="line-height:1.6;margin-top:10px">
+      <li>Download the Device Agent from <a class="btn small" href="/download/WRLD-Device-Agent.zip">Downloads</a>.</li>
+      <li>Unzip it, then run <span class="mono">npm install</span> and <span class="mono">npm run dev</span>.</li>
+      <li>Paste your Base URL and an API Key from this dashboard into the Agent.</li>
+      <li>Click <span class="mono">Scan apps</span> then <span class="mono">Send report</span>.</li>
+      <li>Come back to Dash — your Installed Apps list will appear.</li>
+    </ol>
+
+    <div class="cardText muted" style="margin-top:12px">
+      Your Base URL: <span class="mono"><%= baseUrl %></span>
+    </div>
+  </section>
+
+  <section class="card big" data-reveal>
+    <div class="cardTop">
+      <div class="cardTitle" style="margin:0">API Keys</div>
+
+      <form method="POST" action="/dash/apikeys/generate" class="keyForm">
+        <input class="input small" name="label" placeholder="Label (optional)" maxlength="32" />
+        <button class="btn primary small" type="submit">Generate a key</button>
+      </form>
+    </div>
+
+    <div class="tableWrap">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Label</th>
+            <th>Key</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!apiKeys || apiKeys.length === 0) { %>
+            <tr>
+              <td colspan="3" class="muted">No keys yet. Generate your first key.</td>
+            </tr>
+          <% } else { %>
+            <% apiKeys.forEach((k) => { %>
+              <tr>
+                <td><%= k.label %></td>
+                <td class="mono"><%= k.masked %></td>
+                <td><%= new Date(k.created_at).toLocaleString() %></td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cardText muted" style="margin-top:10px">
+      Keys are masked here. When you generate a key, we show it once—copy it right away.
+    </div>
+  </section>
+
+  <section class="card big" data-reveal>
+    <div class="cardTitle">Connected devices</div>
+    <div class="tableWrap">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Last report</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!devices || devices.length === 0) { %>
+            <tr><td colspan="2" class="muted">No device reports yet.</td></tr>
+          <% } else { %>
+            <% devices.forEach((d) => { %>
+              <tr>
+                <td class="mono"><%= d.device_tag %></td>
+                <td><%= new Date(d.updated_at).toLocaleString() %></td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,6 @@
+<% if (flash) { %>
+  <div class="flash <%= flash.type %>" role="status" aria-live="polite">
+    <div class="flashDot" aria-hidden="true"></div>
+    <div class="flashText"><%= flash.text %></div>
+  </div>
+<% } %>

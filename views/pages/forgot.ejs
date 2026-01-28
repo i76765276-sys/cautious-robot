@@ -1,0 +1,25 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/nav") %>
+
+<main class="wrap">
+  <%- include("../partials/flash") %>
+
+  <section class="pageHead" data-reveal>
+    <h1 class="pageTitle">Reset password</h1>
+    <p class="pageSub">If your email matches an account, you’ll be taken to a page to set a new password.</p>
+  </section>
+
+  <section class="card big" data-reveal>
+    <form method="POST" action="/forgot" class="form">
+      <label class="lbl">Email</label>
+      <input class="input" name="email" placeholder="email" type="email" autocomplete="email" required />
+
+      <div class="cta" style="margin-top:14px">
+        <button class="btn primary" type="submit">Generate reset token</button>
+        <a class="btn" href="/login">Back to login</a>
+      </div>
+    </form>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>

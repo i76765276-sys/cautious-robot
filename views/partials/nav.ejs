@@ -1,0 +1,37 @@
+<header class="top">
+  <div class="brand">
+    <div class="logo" aria-hidden="true"></div>
+    <div class="brandText">
+      <div class="name"><%= siteName %></div>
+      <div class="tag"><%= tagline %></div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <a class="link <%= path === '/' ? 'active' : '' %>" href="/">Home</a>
+    <a class="link <%= path === '/about' ? 'active' : '' %>" href="/about">About</a>
+    <a class="link <%= path === '/downloads' ? 'active' : '' %>" href="/downloads">Downloads</a>
+
+    <% if (!user) { %>
+      <a class="link <%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
+      <a class="link <%= path === '/register' ? 'active' : '' %>" href="/register">Register</a>
+    <% } else { %>
+      <a class="link <%= path === '/dash' ? 'active' : '' %>" href="/dash">Dash</a>
+      <a class="link <%= path === '/dash/sessions' ? 'active' : '' %>" href="/dash/sessions">Sessions</a>
+      <% if (isAdmin) { %>
+        <a class="link <%= path === '/admin' ? 'active' : '' %>" href="/admin">Admin</a>
+      <% } %>
+      <a class="link" href="/logout">Logout</a>
+    <% } %>
+  </nav>
+
+  <% if (user) { %>
+    <div class="userMini">
+      <div class="userAvatar fallback" aria-hidden="true"></div>
+      <div class="userText">
+        <div class="userName">Hey, <%= user.username %></div>
+        <div class="userId"><%= user.email %></div>
+      </div>
+    </div>
+  <% } %>
+</header>

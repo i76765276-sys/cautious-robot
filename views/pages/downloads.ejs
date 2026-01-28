@@ -1,0 +1,62 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/nav") %>
+
+<main class="wrap">
+  <%- include("../partials/flash") %>
+
+  <section class="pageHead" data-reveal>
+    <h1 class="pageTitle">Downloads</h1>
+    <p class="pageSub">Downloads available for your account will appear here.</p>
+  </section>
+
+
+  <section class="card big" data-reveal>
+    <div class="cardTitle">Required download</div>
+    <div class="noticeLock" style="margin-top:10px">
+      <div class="badge">Required</div>
+      <div>
+        <div style="font-weight:800;margin-bottom:6px">WRLD Device Agent</div>
+        <div class="muted" style="margin-bottom:10px">
+          Installed Apps in your dashboard only works after the Device Agent sends a report from your computer.
+        </div>
+        <div class="cta">
+          <a class="btn primary" href="/download/WRLD-Device-Agent.zip">Download Device Agent</a>
+          <a class="btn" href="/dash/device-agent">Setup guide</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card big" data-reveal>
+    <div class="cardTitle">Available files</div>
+
+    <% if (!items || items.length === 0) { %>
+      <div class="cardText muted">
+        No downloads available yet. Check back soon.
+      </div>
+    <% } else { %>
+      <div class="tableWrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Size</th>
+              <th>Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% items.forEach((f) => { %>
+              <tr>
+                <td class="mono"><%= f.name %></td>
+                <td><%= (f.size / 1024).toFixed(1) %> KB</td>
+                <td><a class="btn small" href="/download/<%= encodeURIComponent(f.name) %>">Download</a></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>

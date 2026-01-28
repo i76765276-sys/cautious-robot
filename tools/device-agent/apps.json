@@ -1,0 +1,5 @@
+[
+  { "name": "WRLD Panel", "version": "1.0.0", "source": "local" },
+  { "name": "WRLD Bot", "version": "1.0.0", "source": "local" },
+  { "name": "Node.js", "version": "20.x", "source": "system" }
+]

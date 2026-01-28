@@ -1,0 +1,25 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/nav") %>
+
+<main class="wrap">
+  <%- include("../partials/flash") %>
+
+  <section class="pageHead" data-reveal>
+    <h1 class="pageTitle">Set new password</h1>
+    <p class="pageSub">Set a new password below.</p>
+  </section>
+
+  <section class="card big" data-reveal>
+    <form method="POST" action="/reset/<%= encodeURIComponent(token) %>" class="form">
+      <label class="lbl">New password</label>
+      <input class="input" name="password" placeholder="min 8 characters" type="password" autocomplete="new-password" required />
+
+      <div class="cta" style="margin-top:14px">
+        <button class="btn primary" type="submit">Update password</button>
+        <a class="btn" href="/login">Login</a>
+      </div>
+    </form>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>

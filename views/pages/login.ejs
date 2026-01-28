@@ -1,0 +1,38 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/nav") %>
+
+<main class="wrap">
+  <%- include("../partials/flash") %>
+
+  <section class="pageHead" data-reveal>
+    <h1 class="pageTitle">Login</h1>
+    <p class="pageSub">If you’re not already signed in, logging in starts a new secure session for this device.</p>
+  </section>
+
+  <section class="card big" data-reveal>
+    <form method="POST" action="/login" class="form">
+      <label class="lbl">Username or Email</label>
+      <input class="input" name="login" placeholder="username or email" autocomplete="username" required />
+
+      <label class="lbl" style="margin-top:12px">Password</label>
+      <input class="input" name="password" placeholder="password" type="password" autocomplete="current-password" required />
+
+      <label class="check">
+        <input type="checkbox" name="remember" checked />
+        <span>Remember me</span>
+      </label>
+
+      <div class="cta" style="margin-top:14px">
+        <button class="btn primary" type="submit">Login</button>
+        <a class="btn" href="/register">Register</a>
+        <a class="btn" href="/forgot">Forgot password</a>
+      </div>
+    </form>
+
+    <div class="cardText muted" style="margin-top:12px">
+      <span class="mono">Quick note:</span> <%= humanTip('auth') %>
+    </div>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>

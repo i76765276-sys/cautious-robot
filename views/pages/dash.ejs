@@ -1,0 +1,184 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/nav") %>
+
+<main class="wrap">
+  <%- include("../partials/flash") %>
+
+  <section class="pageHead" data-reveal>
+    <h1 class="pageTitle">Dash</h1>
+    <p class="pageSub"><%= greeting %>, <span class="mono"><%= user.username %></span>. You’re signed in as <span class="mono"><%= user.email %></span>.</p>
+  </section>
+
+
+  <section class="card big" id="agentGate" data-reveal style="<%= (devices && devices.length) ? "display:none" : "" %>">
+    <div class="cardTitle">Device Agent required</div>
+    <div class="noticeLock" style="margin-top:10px">
+      <div class="badge">Required</div>
+      <div>
+        <div style="font-weight:850;margin-bottom:6px">Install the WRLD Device Agent to unlock Installed Apps</div>
+        <div class="muted" style="margin-bottom:10px">
+          Your dashboard will show installed apps only after a device report is received.
+        </div>
+        <div class="cta">
+          <a class="btn primary" href="/download/WRLD-Device-Agent.zip">Download Device Agent</a>
+          <a class="btn" href="/dash/device-agent">Setup guide</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid2" data-reveal>
+        <article class="card big" id="appsCard">
+      <div class="cardTop" style="align-items:flex-start">
+        <div>
+          <div class="cardTitle" style="margin:0">Installed Apps</div>
+          <div class="cardText muted" id="appsUpdated" style="margin-top:8px">
+            <% if (reportUpdatedAt) { %>
+              Updated: <%= new Date(reportUpdatedAt).toLocaleString() %>
+            <% } else { %>
+              No device report yet.
+            <% } %>
+          </div>
+        </div>
+
+        <div class="deviceBar">
+          <div class="muted" id="appsMeta"><%= (installedApps || []).length %> app<%= (installedApps || []).length === 1 ? "" : "s" %></div>
+          <select class="select" id="deviceSelect" aria-label="Device">
+            <% if (devices && devices.length) { %>
+              <% devices.forEach((d) => { %>
+                <option value="<%= d.device_tag %>" <%= d.device_tag === selectedDevice ? "selected" : "" %>><%= d.device_tag %> • <%= new Date(d.updated_at).toLocaleString() %></option>
+              <% }) %>
+            <% } else { %>
+              <option value="">No devices yet</option>
+            <% } %>
+          </select>
+        </div>
+      </div>
+
+      <div class="tableWrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Version</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody id="appsBody">
+            <% if (!installedApps || installedApps.length === 0) { %>
+              <tr>
+                <td colspan="3" class="muted">No WRLD ENT apps reported yet for this device. Install the Device Agent and send a report.</td>
+              </tr>
+            <% } else { %>
+              <% installedApps.forEach((a) => { %>
+                <tr>
+                  <td><%= a.name %></td>
+                  <td class="mono"><%= a.version || "-" %></td>
+                  <td class="mono"><%= a.source || "agent" %></td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cardText muted" style="margin-top:10px">
+        Raw data: <a class="btn small" id="rawLink" href="/api/device/apps?device_tag=<%= encodeURIComponent(selectedDevice || "") %>">/api/device/apps</a>
+        <span class="muted">•</span>
+        <a class="btn small" href="/dash/device-agent">Device Agent setup</a>
+      </div>
+    </article>
+
+
+    <article class="card big">
+      <div class="cardTitle">Announcements</div>
+      <div class="tableWrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Message</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (!announcements || announcements.length === 0) { %>
+              <tr>
+                <td colspan="3" class="muted">No announcements yet. When you're ready, post one from the Admin page.</td>
+              </tr>
+            <% } else { %>
+              <% (announcements || []).forEach((n) => { %>
+                <tr>
+                  <td style="font-weight:750"><%= n.title %></td>
+                  <td><%= n.body %></td>
+                  <td><%= new Date(n.created_at).toLocaleString() %></td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="card big" style="grid-column: 1 / -1;">
+      <div class="cardTop">
+        <div class="cardTitle" style="margin:0">API Keys</div>
+
+        <form method="POST" action="/dash/apikeys/generate" class="keyForm">
+          <input class="input small" name="label" placeholder="Label (optional)" maxlength="32" />
+          <button class="btn primary small" type="submit">Generate a key</button>
+        </form>
+      </div>
+
+      <div class="tableWrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Label</th>
+              <th>Key</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (!apiKeys || apiKeys.length === 0) { %>
+              <tr>
+                <td colspan="3" class="muted">No keys yet. Generate your first key.</td>
+              </tr>
+            <% } else { %>
+              <% apiKeys.forEach((k) => { %>
+                <tr>
+                  <td><%= k.label %></td>
+                  <td class="mono"><%= k.masked %></td>
+                  <td><%= new Date(k.created_at).toLocaleString() %></td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cardText muted" style="margin-top:10px">
+        Keys are masked here. When you generate a key, we show it once—copy it right away.
+      </div>
+    </article>
+  </section>
+
+  <section class="card big" data-reveal>
+    <div class="cardTitle">Quick links</div>
+    <div class="cta">
+      <a class="btn" href="/dash/sessions">My Sessions</a>
+      <a class="btn" href="/logout">Logout</a>
+    </div>
+  </section>
+</main>
+
+<script>
+  window.__dash = {
+    selectedDevice: <%- JSON.stringify(selectedDevice || "") %>,
+    reportUpdatedAt: <%- JSON.stringify(reportUpdatedAt || null) %>
+  };
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script defer src="/assets/dash.js"></script>
+
+<%- include("../partials/footer") %>

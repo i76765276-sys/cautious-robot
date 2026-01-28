@@ -1,0 +1,62 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/nav") %>
+
+<main class="wrap">
+  <%- include("../partials/flash") %>
+
+  <section class="hero" data-reveal>
+    <div class="pill">
+      <span class="spark" aria-hidden="true"></span>
+      <%= serverName %>
+    </div>
+
+    <h1 class="title">
+      <%= greeting %><% if (user) { %>, <span class="shine"><%= user.username %></span><% } %>.<br />Welcome to <span class="shine"><%= siteName %></span>.
+    </h1>
+
+    <p class="sub">
+      <% if (!user) { %>Create an account in under a minute, and you’ll be signed in right away.<% } else { %>You’re signed in—your session will stay active while you use the site.<% } %> <span class="muted">Tip:</span> <%= humanTip('home') %>
+    </p>
+
+    <div class="cta">
+      <% if (!user) { %>
+        <a class="btn primary" href="/login">Login</a>
+        <a class="btn" href="/register">Register</a>
+        <a class="btn" href="/forgot">Reset Password</a>
+      <% } else { %>
+        <a class="btn primary" href="/dash">Open Dashboard</a>
+        <a class="btn" href="/dash/sessions">My Sessions</a>
+        <a class="btn" href="/logout">Logout</a>
+      <% } %>
+      <a class="btn" href="/downloads">Downloads</a>
+    </div>
+  </section>
+
+  <section class="grid" data-reveal>
+    <article class="card">
+      <div class="cardTop">
+        <div class="badge">Remember me</div>
+        <div class="dots" aria-hidden="true"></div>
+      </div>
+      <div class="cardText">Choose “Remember me” to stay signed in longer, or turn it off for a session-only cookie.</div>
+    </article>
+
+    <article class="card">
+      <div class="cardTop">
+        <div class="badge">Session manager</div>
+        <div class="dots" aria-hidden="true"></div>
+      </div>
+      <div class="cardText">See every active session and revoke anything you don’t recognize.</div>
+    </article>
+
+    <article class="card">
+      <div class="cardTop">
+        <div class="badge">Device apps</div>
+        <div class="dots" aria-hidden="true"></div>
+      </div>
+      <div class="cardText">Installed Apps comes from your Device Agent report—secure, explicit, and under your control.</div>
+    </article>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,23 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/nav") %>
+
+<main class="wrap">
+  <%- include("../partials/flash") %>
+
+  <section class="pageHead" data-reveal>
+    <h1 class="pageTitle">About</h1>
+    <p class="pageSub">
+      This site is built for WRLD ENT: clean pages, SQLite-backed sessions, and a dashboard that stays out of your way. It includes remember-me, session controls, password reset, admin announcements, and device app reports.
+    </p>
+  </section>
+
+  <section class="card big" data-reveal>
+    <div class="cardTitle">Installed Apps note</div>
+    <div class="cardText">
+      Installed apps aren’t shared automatically for privacy. Instead, the optional the WRLD Device Agent can run on your machine and report what you choose to share.
+      When you’re signed in, Dash shows the latest report linked to your device.
+    </div>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>
