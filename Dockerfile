@@ -1,39 +1,38 @@
-# syntax = docker/dockerfile:1
+# Stage 1: Build the Application
+# We use node:20-slim as the base for building and installing dependencies.
+FROM node:20-slim AS build
 
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=22.21.1
-FROM node:${NODE_VERSION}-slim AS base
+# Set the working directory inside the container
+WORKDIR /usr/src/app
 
-LABEL fly_launch_runtime="Node.js"
+# Copy package.json and package-lock.json first to leverage Docker caching.
+# If these files don't change, subsequent builds can skip 'npm install'.
+COPY package*.json ./
 
-# Node.js app lives here
-WORKDIR /app
+# Install dependencies
+RUN npm install
 
-# Set production environment
-ENV NODE_ENV="production"
-
-
-# Throw-away build stage to reduce size of final image
-FROM base AS build
-
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
-
-# Install node modules
-COPY package-lock.json package.json ./
-RUN npm ci
-
-# Copy application code
+# Copy the rest of the application source code
 COPY . .
 
+# Stage 2: Create the Final Production Image
+# We use node:20-slim-buster (or node:20-slim-bullseye, or similar) as a minimal runtime image.
+FROM node:20-slim
 
-# Final stage for app image
-FROM base
+# Set the working directory
+WORKDIR /usr/src/app
 
-# Copy built application
-COPY --from=build /app /app
+# Copy the node_modules and built application files from the 'build' stage
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/package*.json ./
+COPY --from=build /usr/src/app .
 
-# Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
-CMD [ "npm", "run", "start" ]
+# Expose the port your app runs on
+ENV PORT=8080
+EXPOSE $PORT
+
+# Run the application using the non-root user (recommended for security)
+USER node
+
+# Define the command to start your application
+CMD [ "node", "index.js" ]
